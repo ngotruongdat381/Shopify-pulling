@@ -1,0 +1,257 @@
+<?php
+/**
+ * Plugin Name: SHOPIFY PULLING
+ * Plugin URI: http://
+ * Description: Pull data from Shopify
+ * Version: 1.0 
+ * Author: MOB
+ * Author URI: 
+ * License: GPLv2
+ */
+
+define('SHOPIFY_LINK','https://36447a1c8002d4de04f830dbc07906f2:a0fbad43d7ba56aee3041497088896c4@store-minetanbodyskin-com.myshopify.com/admin/products/');
+//Set action for quickview link
+function quickview_action_shopify() {
+  ?>
+    <script type="text/javascript">
+      var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
+    </script>
+
+    <div id="quickViewOverlay"></div>
+    <div id="quickViewResponseData">
+      <div class="close-quickview">
+        <img src="<?php echo plugins_url( 'img/icon-close.png', __FILE__ );?>"/>
+      </div>
+
+   <!--    <div class="row-1">
+        <div class="left">
+          <p class="product-name">
+          </p>
+          <p class="description" style="display: none"></p>
+        </div>
+        <div class="right">
+          <p class="image">
+            <img src=""/>
+          </p>
+          <p class="price"></p>
+          <p class="qty">
+            <span>qty.</span>
+            <select id="qty" name="" class="quantityInput">
+              <option selected="selected" value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+              <option value="11">11</option>
+              <option value="12">12</option>
+              <option value="13">13</option>
+              <option value="14">14</option>
+              <option value="15">15</option>
+              <option value="16">16</option>
+              <option value="17">17</option>
+              <option value="18">18</option>
+              <option value="19">19</option>
+              <option value="20">20</option>
+              <option value="21">21</option>
+              <option value="22">22</option>
+              <option value="23">23</option>
+              <option value="24">24</option>
+              <option value="25">25</option>
+              <option value="26">26</option>
+              <option value="27">27</option>
+              <option value="28">28</option>
+              <option value="29">29</option>
+              <option value="30">30</option>
+            </select>
+          </p>
+          <p class="addToCart">
+            <a id="cart-link" href=""><input class="btn" value="Add to cart." type="submit"></a>
+            <span> or </span>
+            <a id="more-info" href="">more info</a>
+          </p>
+        </div>
+      </div> -->
+
+     <div id="QuickViewContent">
+
+		<div class="qprod">
+			<div id="QuickViewImage" class="ProductThumbImage">
+				<a href="">
+					<img src="">
+				</a>
+			</div>
+
+		</div>
+
+		<div id="QuickViewProductDetails">
+				<div id="ProductDetails" class="ProductDetailsGrid productDetails ProductAddToCart">			
+					
+					<!-- Begin Product Details Table -->			
+					<h1 class="product-name" ></h1>
+
+					<div class="DetailRow PriceRow p-price" style="">
+						<div class="Value">
+							<span class="ProductPrice VariationProductPrice"></span>
+						</div>
+					</div>
+
+					<div class="DetailRow" style="display: ">
+						<div class="productAttributeLabel QuantityInput" style="display: ">
+							Quantity:
+						</div>
+						<div class="productAttributeValue">
+							<span style="display: ;">
+								<select id="qty" name="qty[]" class="Field45 quantityInput" style="">
+									<option selected="selected" value="1">1</option>
+									<option value="2">2</option>
+									<option value="3">3</option>
+									<option value="4">4</option>
+									<option value="5">5</option>
+									<option value="6">6</option>
+									<option value="7">7</option>
+									<option value="8">8</option>
+									<option value="9">9</option>
+									<option value="10">10</option>
+									<option value="11">11</option>
+									<option value="12">12</option>
+									<option value="13">13</option>
+									<option value="14">14</option>
+									<option value="15">15</option>
+									<option value="16">16</option>
+									<option value="17">17</option>
+									<option value="18">18</option>
+									<option value="19">19</option>
+									<option value="20">20</option>
+									<option value="21">21</option>
+									<option value="22">22</option>
+									<option value="23">23</option>
+									<option value="24">24</option>
+									<option value="25">25</option>
+									<option value="26">26</option>
+									<option value="27">27</option>
+									<option value="28">28</option>
+									<option value="29">29</option>
+									<option value="30">30</option>
+								</select>
+							</span>
+						</div>
+					</div>
+					
+					<div class="DetailRow addToCart">
+						<a id="cart-link" style="display: initial;" href=""><input class="btn" value="Add to cart." type="submit"></a>
+			            <span style="display: initial;"> or </span>
+			            <a id="more-info" style="display: initial;" href="">more info</a>
+					</div>
+
+					<div class="DetailRow">
+						<p class="description" style="display:none;"></p>    
+					</div>
+				</div>
+		</div>
+	</div>
+
+
+    </div>
+
+    <script type="text/javascript">
+      jQuery(document).ready(function($){
+        jQuery('a[href*="getshopifyproduct"]').on('click', function(e){ // filter quick view links
+          e.preventDefault();
+          jQuery('#quickViewResponseData').css('display', 'flex');
+          jQuery('#quickViewOverlay').css('display', 'block');
+
+          jQuery('.close-quickview').on('click', function(){
+            jQuery('#quickViewResponseData').hide();
+            jQuery('#quickViewOverlay').hide();
+          });
+          jQuery('#quickViewResponseData #qty').on('change', function(){
+            console.log(jQuery('#quickViewResponseData #qty').val());
+            var _href = jQuery('#quickViewResponseData .addToCart #cart-link').attr('href'); 
+            _href = _href.replace(/quantity=[^&]+/, 'quantity=' + jQuery('#quickViewResponseData #qty').val());
+            jQuery('#quickViewResponseData .addToCart #cart-link').attr("href",_href);
+          });
+
+          var data = {
+            'action': 'my_action_shopify',
+            'productUrl': jQuery(this).attr("href")
+          };
+
+          jQuery.post(ajaxurl, data, function(response) {
+            $('#quickViewResponseData .product-name').html(JSON.parse(response).title);
+            $('#quickViewResponseData .description').html(JSON.parse(response).description);
+            $('#quickViewResponseData .ProductPrice').html('$'+JSON.parse(response).price);
+            $('#quickViewResponseData .ProductThumbImage img').attr("src",JSON.parse(response).image_url);
+            $('#quickViewResponseData .addToCart #cart-link').attr("href",'http://store-minetanbodyskin-com.myshopify.com/cart/add?id='+JSON.parse(response).variant_id+'&quantity='+$('#quickViewResponseData #qty').val());
+            $('#quickViewResponseData .addToCart #more-info').attr("href",'http://store-minetanbodyskin-com.myshopify.com/collections/btan-self-tan/products/'+JSON.parse(response).handle);
+          });
+        });
+      });
+    </script>
+  <?php
+}
+add_action( 'wp_footer', 'quickview_action_shopify' );
+
+function get_product_responsse_shopify() {
+  // Create shopify json link
+  $parts = parse_url($_POST['productUrl']);
+  parse_str($parts['query'], $query);
+  $product_id = $query['id'];
+  $shopify_url = SHOPIFY_LINK.$product_id.'.json';
+  $json = file_get_contents($shopify_url);
+  $obj = json_decode($json);
+
+  // Return product object
+  $product = new stdClass();
+  $product->title = $obj->product->title;
+  $product->price = $obj->product->variants[0]->price;
+  $product->description = $obj->product->body_html;
+  $product->image_url = $obj->product->image->src;
+  $product->variant_id = $obj->product->variants[0]->id;
+  $product->handle = $obj->product->handle;
+  echo json_encode($product);
+
+  wp_die();
+  return true;
+}
+add_action( 'wp_ajax_my_action_shopify', 'get_product_responsse_shopify' );
+add_action( 'wp_ajax_nopriv_my_action_shopify', 'get_product_responsse_shopify' );
+
+function enqueue_scripts_and_styles()
+{
+        wp_register_style( 'plugin-styles', plugins_url( '/css/plugin-styles.css', __FILE__ ));
+        wp_enqueue_style( 'plugin-styles' );
+        //wp_enqueue_script('jquery');
+        //wp_register_script('my-plugin-script', plugins_url( '/js/script.js', __FILE__ ));
+        //wp_enqueue_script( 'my-plugin-script' );
+ 
+}
+add_action( 'wp_enqueue_scripts', 'enqueue_scripts_and_styles' );
+
+/*add_action('wp_enqueue_scripts', 'add_additional_styles', 15);
+function add_additional_styles() {
+  wp_enqueue_style( 'addition-styles', get_theme_root_uri() . '/x-child/framework/styles/addition-styles.css',false,'1.0','all');
+  wp_enqueue_script( 'addition-scripts', get_theme_root_uri() . '/x-child/framework/js/addition-scripts.js' );
+}
+
+
+add_action( 'wp_enqueue_scripts', 'my_enqueued_assets' );
+
+function my_enqueued_assets() {
+	wp_enqueue_script( 'my-script', plugin_dir_url( __FILE__ ) . '/js/my-script.js', array( 'jquery' ), '1.0', true );
+}
+
+add_action( 'wp_enqueue_scripts', 'prefix_add_my_stylesheet' );
+
+
+function prefix_add_my_stylesheet() {
+    // Respects SSL, Style.css is relative to the current file
+    wp_register_style( 'prefix-style', plugins_url('style.css', __FILE__) );
+    wp_enqueue_style( 'prefix-style' );
+}*/
+
+?>
