@@ -184,10 +184,14 @@ function quickview_action_shopify() {
           jQuery.post(ajaxurl, data, function(response) {
             $('#quickViewResponseData .product-name').html(JSON.parse(response).title);
             $('#quickViewResponseData .description').html(JSON.parse(response).description);
-            $('#quickViewResponseData .ProductPrice').html('$'+JSON.parse(response).price);
-            $('#quickViewResponseData .ProductThumbImage img').attr("src",JSON.parse(response).image_url);
-            $('#quickViewResponseData .addToCart #cart-link').attr("href",'http://store-minetanbodyskin-com.myshopify.com/cart/add?id='+JSON.parse(response).variant_id+'&quantity='+$('#quickViewResponseData #qty').val());
-            $('#quickViewResponseData .addToCart #more-info').attr("href",'http://store-minetanbodyskin-com.myshopify.com/collections/btan-self-tan/products/'+JSON.parse(response).handle);
+            $('#quickViewResponseData .price').html('$'+JSON.parse(response).price);
+            $('#quickViewResponseData .image img').attr("src",JSON.parse(response).image_url);
+            $('#quickViewResponseData .add-to-cart #cart-link').attr("href",'http://store-minetanbodyskin-com.myshopify.com/cart/add?id='+JSON.parse(response).variant_id+'&quantity='+$('#quickViewResponseData #qty').val());
+            if (JSON.parse(response).collection != '' && JSON.parse(response).collection != null) {
+              $('#quickViewResponseData .add-to-cart #more-info').attr("href",'http://store-minetanbodyskin-com.myshopify.com/collections/'+JSON.parse(response).collection+'/products/'+JSON.parse(response).handle+'?view='+JSON.parse(response).query_string);
+            } else {
+              $('#quickViewResponseData .add-to-cart #more-info').attr("href",'http://store-minetanbodyskin-com.myshopify.com/products/'+JSON.parse(response).handle+'?view='+JSON.parse(response).query_string);
+            }
           });
         });
       });
@@ -201,6 +205,11 @@ function get_product_responsse_shopify() {
   $parts = parse_url($_POST['productUrl']);
   parse_str($parts['query'], $query);
   $product_id = $query['id'];
+  $collection = $query['collection'];
+  $query_string = $query['query_string'];
+  if ($query_string == '' || $query_string == null) {
+    $query_string  = 'btan-self-tan';
+  }
   $shopify_url = SHOPIFY_LINK.$product_id.'.json';
   $json = file_get_contents($shopify_url);
   $obj = json_decode($json);
@@ -209,10 +218,12 @@ function get_product_responsse_shopify() {
   $product = new stdClass();
   $product->title = $obj->product->title;
   $product->price = $obj->product->variants[0]->price;
-  $product->description = $obj->product->body_html;
+  $product->description = preg_replace('#<br\s*/?>(?:\s*<br\s*/?>)+#i', '<br />', $obj->product->body_html);
   $product->image_url = $obj->product->image->src;
   $product->variant_id = $obj->product->variants[0]->id;
   $product->handle = $obj->product->handle;
+  $product->collection = $collection;
+  $product->query_string = $query_string;
   echo json_encode($product);
 
   wp_die();
