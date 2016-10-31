@@ -10,6 +10,7 @@
  */
 
 define('SHOPIFY_LINK','https://36447a1c8002d4de04f830dbc07906f2:a0fbad43d7ba56aee3041497088896c4@store-minetanbodyskin-com.myshopify.com/admin/products/');
+define('DEFAULT_QUERYSTRING','');
 //Set action for quickview link
 function quickview_action_shopify() {
   ?>
@@ -208,7 +209,7 @@ function get_product_responsse_shopify() {
   $collection = $query['collection'];
   $query_string = $query['query_string'];
   if ($query_string == '' || $query_string == null) {
-    $query_string  = 'btan-self-tan';
+    $query_string  = DEFAULT_QUERYSTRING;
   }
   $shopify_url = SHOPIFY_LINK.$product_id.'.json';
   $json = file_get_contents($shopify_url);
