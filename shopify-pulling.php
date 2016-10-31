@@ -197,6 +197,7 @@ function shopify_pulling_settings_page() {
       <?php settings_fields( 'shopify-pulling-plugin-settings-group' ); ?>
       <?php do_settings_sections( 'shopify-pulling-plugin-settings-group' ); ?>
       <p>Shopify API link Ex: https://36447a1c8002d4de04f830dbc07906f2:a0fbad43d7ba56aee3041497088896c4@store-minetanbodyskin-com.myshopify.com/admin/products/</p>
+      <p>Quickview link Ex: https://store-minetanbodyskin-com.myshopify.com/getshopifyproduct?id=6490947845&collection=mine-self-tan&query_string=mine-retail</p>
       <table class="form-table">
           <tr valign="top">
           <th scope="row">Shopify API Link</th>
