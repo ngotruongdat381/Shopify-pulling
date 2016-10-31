@@ -9,8 +9,8 @@
  * License: GPLv2
  */
 
-define('SHOPIFY_LINK','https://36447a1c8002d4de04f830dbc07906f2:a0fbad43d7ba56aee3041497088896c4@store-minetanbodyskin-com.myshopify.com/admin/products/');
-define('DEFAULT_QUERYSTRING','');
+define('SHOPIFY_LINK',get_option('shopify_link'));
+define('DEFAULT_QUERYSTRING', get_option('default_querystring'));
 //Set action for quickview link
 function quickview_action_shopify() {
   ?>
@@ -265,5 +265,43 @@ function prefix_add_my_stylesheet() {
     wp_register_style( 'prefix-style', plugins_url('style.css', __FILE__) );
     wp_enqueue_style( 'prefix-style' );
 }*/
+add_action('admin_menu', 'shopify_pulling_plugin_menu');
 
+function shopify_pulling_plugin_menu() {
+  add_menu_page('Shopify Plugin Settings', 'Shopify Plugin Settings', 'administrator', 'shopify-pulling-plugin-settings', 'shopify_pulling_settings_page', 'dashicons-admin-generic');
+}
+
+function shopify_pulling_settings_page() {
+  ?>
+  <div class="wrap">
+  <h2>Staff Details</h2>
+
+  <form method="post" action="options.php">
+      <?php settings_fields( 'shopify-pulling-plugin-settings-group' ); ?>
+      <?php do_settings_sections( 'shopify-pulling-plugin-settings-group' ); ?>
+      <p>Shopify API link Ex: https://36447a1c8002d4de04f830dbc07906f2:a0fbad43d7ba56aee3041497088896c4@store-minetanbodyskin-com.myshopify.com/admin/products/</p>
+      <table class="form-table">
+          <tr valign="top">
+          <th scope="row">Shopify API Link</th>
+          <td><input type="text" name="shopify_link" value="<?php echo esc_attr( get_option('shopify_link') ); ?>" /></td>
+          </tr>
+           
+          <tr valign="top">
+          <th scope="row">Default query string</th>
+          <td><input type="text" name="default_querystring" value="<?php echo esc_attr( get_option('default_querystring') ); ?>" /></td>
+          </tr>
+      </table>
+      
+      <?php submit_button(); ?>
+
+  </form>
+  </div>
+<?php
+}
+add_action( 'admin_init', 'shopify_pulling_plugin_settings' );
+
+function shopify_pulling_plugin_settings() {
+  register_setting( 'shopify-pulling-plugin-settings-group', 'shopify_link' );
+  register_setting( 'shopify-pulling-plugin-settings-group', 'default_querystring' );
+}
 ?>
